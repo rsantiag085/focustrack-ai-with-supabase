@@ -1,6 +1,6 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-const BACKEND_URL = 'http://localhost:8000';
+const BACKEND_URL = '';
 
 let supabase;
 let currentSession = null;

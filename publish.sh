@@ -1,30 +1,49 @@
 #!/bin/bash
+set -e
 
-# Publish script for FocusTrack AI
-echo "🚀 Welcome to FocusTrack AI Publisher"
-read -p "Enter new version (e.g., v4.0.0): " NEW_VERSION
+# ── Configuração ──────────────────────────────────────────────────────────────
+DO_USER="root"
+DO_HOST=""          # ex: 123.45.67.89
+APP_DIR="/opt/focustrack"
+# ─────────────────────────────────────────────────────────────────────────────
 
-if [[ -z "$NEW_VERSION" ]]; then
-    echo "Version cannot be empty."
+if [[ -z "$DO_HOST" ]]; then
+    echo "Erro: configure DO_HOST no topo deste script com o IP do seu Droplet."
     exit 1
 fi
 
-if [[ ! "$NEW_VERSION" == v* ]]; then
-    NEW_VERSION="v$NEW_VERSION"
-fi
+echo "==> Fazendo push do código para o GitHub..."
+git push origin main
 
-echo "Updating .env with APP_VERSION=$NEW_VERSION"
-# Remove old APP_VERSION if exists and append new
-if grep -q "^APP_VERSION=" .env; then
-    sed -i "s/^APP_VERSION=.*/APP_VERSION=$NEW_VERSION/" .env
-else
-    echo "APP_VERSION=$NEW_VERSION" >> .env
-fi
+echo "==> Conectando ao Droplet $DO_HOST..."
+ssh "$DO_USER@$DO_HOST" bash <<EOF
+    set -e
 
-echo "Building Docker container..."
-docker-compose build
+    if ! command -v docker &>/dev/null; then
+        echo "Instalando Docker..."
+        curl -fsSL https://get.docker.com | sh
+    fi
 
-echo "Starting deployment..."
-docker-compose up -d
+    if [ ! -d "$APP_DIR" ]; then
+        git clone git@github.com:rsantiag085/focustrack-ai-with-supabase.git $APP_DIR
+    fi
 
-echo "✅ App updated to $NEW_VERSION and deployed!"
+    cd $APP_DIR
+    git pull origin main
+
+    if [ ! -f ".env" ]; then
+        echo "AVISO: arquivo .env não encontrado em $APP_DIR no servidor."
+        echo "Crie o .env antes de continuar. Abortando."
+        exit 1
+    fi
+
+    docker compose down --remove-orphans
+    docker compose build --no-cache
+    docker compose up -d
+
+    echo "Deploy concluído. Containers rodando:"
+    docker compose ps
+EOF
+
+echo ""
+echo "✅ FocusTrack AI publicado em http://$DO_HOST"
