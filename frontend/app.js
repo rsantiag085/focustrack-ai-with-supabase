@@ -51,6 +51,14 @@ window.handleLogout = async () => {
     if (error) throw error;
 };
 
+window.handleGoogleLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.origin }
+    });
+    if (error) throw error;
+};
+
 window.apiFetch = async (endpoint, options = {}) => {
     if (!currentSession) {
         throw new Error("No active Supabase session found. Please log in.");
