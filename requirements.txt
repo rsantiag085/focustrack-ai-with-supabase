@@ -1,0 +1,11 @@
+fastapi[all]
+uvicorn
+google-genai
+tenacity
+python-dotenv
+sqlalchemy
+psycopg2-binary
+PyJWT
+bcrypt
+pydantic-settings
+python-jose[cryptography]

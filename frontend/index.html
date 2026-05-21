@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sessão - FocusTrack AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-dark: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --accent: #10b981;
+            --border-color: #334155;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #a78bfa, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.2rem;
+        }
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* Auth Gate Overlay */
+        .auth-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+            width: 100%;
+        }
+        .auth-card {
+            background-color: var(--card-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.4);
+            text-align: center;
+        }
+        .auth-card h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .auth-card p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+        .auth-btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        /* Metrics Row */
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .metric-card {
+            background-color: var(--card-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
+            border-color: var(--primary);
+        }
+
+        .metric-card h3 {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-card .value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-top: 5px;
+        }
+
+        /* Insights / AI Card */
+        .insights-card {
+            background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .insights-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: linear-gradient(to bottom, #10b981, #3b82f6);
+        }
+        .insights-card h2 {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-main);
+        }
+        .insights-text {
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 1.05rem;
+        }
+
+        /* Form Area */
+        .form-card {
+            background-color: var(--card-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 2.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            text-align: left;
+        }
+        .form-group.full {
+            grid-column: span 2;
+        }
+
+        label {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        input, select, textarea {
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 0.85rem 1rem;
+            border-radius: 0.5rem;
+            outline: none;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+
+        input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        .btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .btn.accent {
+            background-color: var(--accent);
+            width: auto;
+            display: inline-flex;
+        }
+        .btn.accent:hover {
+            background-color: #059669;
+        }
+        .btn-danger {
+            background-color: var(--danger);
+            border-color: var(--danger);
+            width: auto;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
+        }
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+        .btn-outline {
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+        .btn-outline:hover {
+            background-color: var(--card-dark);
+            border-color: var(--text-muted);
+        }
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+            width: 100%;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 20px;
+            height: 100%;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 3.5rem;
+            margin-bottom: 2rem;
+            animation: fadeIn 0.4s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            left: 15px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--bg-dark);
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+        }
+
+        .timeline-content {
+            background-color: var(--card-dark);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            transition: border-color 0.2s ease;
+        }
+        .timeline-content:hover {
+            border-color: var(--text-muted);
+        }
+        .timeline-content h4 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+        .timeline-meta {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            font-family: monospace;
+            background-color: rgba(0,0,0,0.3);
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.3rem;
+        }
+        .timeline-desc {
+            color: #e2e8f0;
+            line-height: 1.5;
+        }
+        .focus-badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            background-color: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- AUTH GATE OVERLAY -->
+    <div class="auth-wrapper" id="auth-container">
+        <div class="auth-card">
+            <h2>FocusTrack AI</h2>
+            <p>Autenticação FocusTrack</p>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="auth-email" placeholder="sre@company.com">
+            </div>
+            <div class="form-group" style="margin-top: 1rem;">
+                <label>Password</label>
+                <input type="password" id="auth-password" placeholder="••••••••">
+            </div>
+            <div id="auth-error" style="color: var(--danger); font-size: 0.85rem; margin-top: 1rem; display: none; font-weight: 500;"></div>
+            
+            <div class="auth-btn-group">
+                <button class="btn" style="flex: 1;" onclick="doLogin()">Login</button>
+                <button class="btn btn-outline" style="flex: 1;" onclick="doSignUp()">Sign Up</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN DASHBOARD -->
+    <div class="container" id="main-dashboard" style="display: none;">
+        <!-- Header -->
+        <header>
+            <div>
+                <h1>Análise da Sessão de Foco</h1>
+                <p>Monitoramento Analítico & Insights com Supabase</p>
+            </div>
+            <button class="btn btn-danger" onclick="doLogout()">🚪 Logout</button>
+        </header>
+
+        <!-- Metrics Row -->
+        <div class="metrics-row">
+            <div class="metric-card">
+                <h3>Horas Totais</h3>
+                <div class="value" id="metric-hours">0.0</div>
+            </div>
+            <div class="metric-card">
+                <h3>Foco Médio</h3>
+                <div class="value" id="metric-focus">0.0</div>
+            </div>
+            <div class="metric-card">
+                <h3>Atividades</h3>
+                <div class="value" id="metric-count">0</div>
+            </div>
+        </div>
+
+        <!-- Insights Card (Jarbis) -->
+        <div class="insights-card">
+            <h2>🧠 Insights do Jarbis</h2>
+            <div class="insights-text" id="jarbis-insight">
+                <i>Aguardando dados da sessão para processar as métricas...</i>
+            </div>
+            <button class="btn accent" style="margin-top: 1.5rem;" id="btn-analisar" onclick="handleAnalisar()">Solicitar Análise ao Jarbis</button>
+        </div>
+
+        <!-- Add Activity Form -->
+        <div class="form-card" id="activity-form">
+            <div class="form-group">
+                <label>Categoria da Atividade</label>
+                <select id="input-categoria">
+                    <option value="Trabalho">Trabalho</option>
+                    <option value="Estudo">Estudo</option>
+                    <option value="Descanso">Descanso</option>
+                    <option value="Família">Família</option>
+                    <option value="Espiritualidade">Espiritualidade</option>
+                    <option value="Outros">Outros</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Nível de Foco (1-10)</label>
+                <input type="number" id="input-foco" min="1" max="10" value="8">
+            </div>
+            <div class="form-group">
+                <label>Início</label>
+                <input type="datetime-local" id="input-inicio">
+            </div>
+            <div class="form-group">
+                <label>Fim</label>
+                <input type="datetime-local" id="input-fim">
+            </div>
+            <div class="form-group full">
+                <label>Descrição Detalhada</label>
+                <textarea id="input-descricao" rows="4" placeholder="Detalhes técnicos da tarefa ou incidente resolvido..."></textarea>
+            </div>
+            <div class="form-group full">
+                <button class="btn" id="btn-salvar" onclick="handleSave()">Registrar Sessão</button>
+            </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="timeline" id="timeline-container">
+            <!-- Items injected by JS -->
+        </div>
+    </div>
+
+    <!-- Integrates API logic -->
+    <script type="module" src="app.js"></script>
+    <script>
+        function getAuthInput() {
+            return {
+                email: document.getElementById('auth-email').value,
+                password: document.getElementById('auth-password').value
+            };
+        }
+
+        async function doLogin() {
+            const errEl = document.getElementById('auth-error');
+            errEl.style.display = 'none';
+            const { email, password } = getAuthInput();
+            try {
+                await window.handleLogin(email, password);
+            } catch (e) {
+                errEl.style.color = 'var(--danger)';
+                errEl.innerText = e.message;
+                errEl.style.display = 'block';
+            }
+        }
+
+        async function doSignUp() {
+            const errEl = document.getElementById('auth-error');
+            errEl.style.display = 'none';
+            const { email, password } = getAuthInput();
+            try {
+                await window.handleSignUp(email, password);
+                errEl.style.color = 'var(--accent)';
+                errEl.innerText = 'Check your email to confirm the account, or log in if auto-confirm is enabled.';
+                errEl.style.display = 'block';
+            } catch (e) {
+                errEl.style.color = 'var(--danger)';
+                errEl.innerText = e.message;
+                errEl.style.display = 'block';
+            }
+        }
+
+        async function doLogout() {
+            try {
+                await window.handleLogout();
+                document.getElementById('timeline-container').innerHTML = '';
+            } catch (e) {
+                console.error("Logout Error:", e);
+            }
+        }
+
+        window.refreshDashboard = async function() {
+            if (!window.loadAtividades) return setTimeout(window.refreshDashboard, 100);
+
+            try {
+                const atividades = await window.loadAtividades();
+                if (!atividades) return;
+
+                let totalFocus = 0;
+                let totalMs = 0;
+
+                const timeline = document.getElementById('timeline-container');
+                timeline.innerHTML = '';
+
+                atividades.forEach(att => {
+                    totalFocus += att.nivel_foco;
+
+                    const inicio = new Date(att.inicio);
+                    const fim = new Date(att.fim);
+                    totalMs += (fim - inicio);
+
+                    const item = document.createElement('div');
+                    item.className = 'timeline-item';
+                    item.innerHTML = `
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                                <h4></h4>
+                                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                    <span class="focus-badge">Foco: ${att.nivel_foco}/10</span>
+                                    <button onclick="handleDelete(${att.id})" style="background: none; border: none; cursor: pointer; color: var(--danger); font-size: 1.1rem; padding: 0.2rem;" title="Excluir">🗑️</button>
+                                </div>
+                            </div>
+                            <div class="timeline-meta">${inicio.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - ${fim.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                            <div class="timeline-desc"></div>
+                        </div>
+                    `;
+                    item.querySelector('h4').textContent = att.categoria;
+                    item.querySelector('.timeline-desc').textContent = att.descricao;
+                    timeline.prepend(item);
+                });
+
+                document.getElementById('metric-count').innerText = atividades.length;
+                document.getElementById('metric-focus').innerText = atividades.length > 0 ? (totalFocus / atividades.length).toFixed(1) : "0.0";
+                document.getElementById('metric-hours').innerText = atividades.length > 0 ? (totalMs / (1000 * 60 * 60)).toFixed(1) : "0.0";
+            } catch (err) {
+                console.error("Dashboard refresh error:", err);
+            }
+        }
+
+        async function handleSave() {
+            const btn = document.getElementById('btn-salvar');
+            const originalText = btn.innerText;
+            btn.innerText = "Salvando...";
+            btn.disabled = true;
+
+            try {
+                const inicioRaw = document.getElementById('input-inicio').value;
+                const payload = {
+                    categoria: document.getElementById('input-categoria').value,
+                    descricao: document.getElementById('input-descricao').value,
+                    data: inicioRaw.split('T')[0],
+                    inicio: new Date(inicioRaw).toISOString(),
+                    fim: new Date(document.getElementById('input-fim').value).toISOString(),
+                    nivel_foco: parseInt(document.getElementById('input-foco').value)
+                };
+
+                await window.saveAtividade(payload);
+                await window.refreshDashboard();
+                document.getElementById('input-descricao').value = "";
+            } catch (e) {
+                console.error("Failed to save activity:", e);
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        async function handleDelete(id) {
+            if (confirm("Tem certeza que deseja excluir esta atividade?")) {
+                try {
+                    await window.deleteAtividade(id);
+                    await window.refreshDashboard();
+                } catch (e) {
+                    console.error("Failed to delete activity:", e);
+                }
+            }
+        }
+
+        async function handleAnalisar() {
+            const btn = document.getElementById('btn-analisar');
+            btn.innerText = "Jarbis Analisando...";
+            btn.disabled = true;
+
+            try {
+                const today = new Date().toISOString().split('T')[0];
+                const report = await window.analisarDia(today);
+                if (report) {
+                    const insightEl = document.getElementById('jarbis-insight');
+                    insightEl.innerHTML = '<strong>Relatório Jarbis:</strong><br>';
+                    const text = document.createElement('span');
+                    text.textContent = report.resumo_ia;
+                    insightEl.appendChild(text);
+                }
+            } catch (e) {
+                console.error("Failed to analyze the day:", e);
+            } finally {
+                btn.innerText = "Solicitar Análise ao Jarbis";
+                btn.disabled = false;
+            }
+        }
+
+        window.addEventListener('load', () => {
+            const setLocalIso = (date, elId) => {
+                const tzOffset = date.getTimezoneOffset() * 60000;
+                const localISOTime = (new Date(date.getTime() - tzOffset)).toISOString().slice(0, 16);
+                document.getElementById(elId).value = localISOTime;
+            };
+
+            const now = new Date();
+            setLocalIso(now, 'input-inicio');
+            setLocalIso(new Date(now.getTime() + 60 * 60000), 'input-fim');
+        });
+    </script>
+</body>
+</html>

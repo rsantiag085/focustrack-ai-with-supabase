@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    container_name: focustrack_cloud_backend
+    ports:
+      - "8000:8000"
+    # The crucial env_file mapping to ensure Supabase credentials flow cleanly
+    env_file:
+      - .env
+    # Explicit entrypoint as requested
+    command: ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    restart: unless-stopped
+
+  frontend:
+    image: nginx:alpine
+    container_name: focustrack_cloud_frontend
+    ports:
+      - "8080:80"
+    volumes:
+      # Map the local frontend directory cleanly to the Nginx serving html path inside the container
+      - ./frontend:/usr/share/nginx/html:ro
+    restart: unless-stopped
