@@ -8,3 +8,6 @@ __pycache__/
 .terraform.lock.hcl
 node_modules/
 .next/
+.agents/
+skills-lock.json
+terraform/
