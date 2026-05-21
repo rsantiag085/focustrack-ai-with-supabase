@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sessão - FocusTrack AI</title>
+    <title>FocusTrack AI</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -395,7 +395,7 @@
             <p>Autenticação FocusTrack</p>
             <div class="form-group">
                 <label>Email</label>
-                <input type="email" id="auth-email" placeholder="sre@company.com">
+                <input type="email" id="auth-email" placeholder="seu@email.com">
             </div>
             <div class="form-group" style="margin-top: 1rem;">
                 <label>Password</label>
@@ -428,8 +428,8 @@
         <!-- Header -->
         <header>
             <div>
-                <h1>Análise da Sessão de Foco</h1>
-                <p>Monitoramento Analítico & Insights com Supabase</p>
+                <h1>FocusTrack AI</h1>
+                <p>Registre suas atividades e acompanhe sua produtividade diária</p>
             </div>
             <button class="btn btn-danger" onclick="doLogout()">🚪 Logout</button>
         </header>
@@ -454,7 +454,7 @@
         <div class="insights-card">
             <h2>🧠 Insights do Jarbis</h2>
             <div class="insights-text" id="jarbis-insight">
-                <i>Aguardando dados da sessão para processar as métricas...</i>
+                <i>Registre suas atividades do dia e solicite uma análise ao Jarbis.</i>
             </div>
             <button class="btn accent" style="margin-top: 1.5rem;" id="btn-analisar" onclick="handleAnalisar()">Solicitar Análise ao Jarbis</button>
         </div>
@@ -486,10 +486,10 @@
             </div>
             <div class="form-group full">
                 <label>Descrição Detalhada</label>
-                <textarea id="input-descricao" rows="4" placeholder="Detalhes técnicos da tarefa ou incidente resolvido..."></textarea>
+                <textarea id="input-descricao" rows="4" placeholder="Descreva o que você realizou nessa atividade..."></textarea>
             </div>
             <div class="form-group full">
-                <button class="btn" id="btn-salvar" onclick="handleSave()">Registrar Sessão</button>
+                <button class="btn" id="btn-salvar" onclick="handleSave()">Registrar Atividade</button>
             </div>
         </div>
 
