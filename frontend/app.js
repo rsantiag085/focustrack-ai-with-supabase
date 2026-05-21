@@ -1,6 +1,7 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
 const BACKEND_URL = '';
+window.APP_VERSION = 'v1.2.0';
 
 let supabase;
 let currentSession = null;

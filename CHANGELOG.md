@@ -1,5 +1,21 @@
 # Changelog — FocusTrack AI
 
+## [v1.2.0] — 2026-05-21
+
+### Resumo
+
+Adição de autenticação via Google OAuth, remoção de linguagem técnica/SRE da interface, versão visível no rodapé e otimizações de infraestrutura.
+
+### Novidades
+
+- **Login com Google**: botão "Continuar com Google" na tela de autenticação via Supabase OAuth
+- **Versão visível**: número da versão exibido no rodapé do dashboard — facilita identificar atualizações
+- **Interface genérica**: textos e placeholders reescritos para qualquer tipo de usuário, sem foco em SRE ou monitoramento
+- **Nginx como reverse proxy**: frontend e backend unificados na porta 80; backend não exposto publicamente
+- **Imagem Docker otimizada**: multi-stage build reduz a imagem de 500 MB para ~216 MB; dependências não utilizadas removidas
+
+---
+
 ## [v1.1.0] — 2026-05-21
 
 ### Resumo
