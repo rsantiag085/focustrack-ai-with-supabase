@@ -3,12 +3,13 @@ set -e
 
 # ── Configuração ──────────────────────────────────────────────────────────────
 DO_USER="root"
-DO_HOST=""          # ex: 123.45.67.89
+DO_HOST="${1:-}"    # uso: bash publish.sh <IP_DO_DROPLET>
 APP_DIR="/opt/focustrack"
 # ─────────────────────────────────────────────────────────────────────────────
 
 if [[ -z "$DO_HOST" ]]; then
-    echo "Erro: configure DO_HOST no topo deste script com o IP do seu Droplet."
+    echo "Uso: bash publish.sh <IP_DO_DROPLET>"
+    echo "Exemplo: bash publish.sh 123.45.67.89"
     exit 1
 fi
 
