@@ -1,6 +1,6 @@
 services:
   backend:
-    image: rsantiag085/focustrack-ai-with-supabase:v1.1.0
+    image: rsantiag085/focustrack-ai-with-supabase:v1.2.0
     container_name: focustrack_backend
     expose:
       - "8000"
